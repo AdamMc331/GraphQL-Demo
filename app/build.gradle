@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+apply from: "../ktlint.gradle"
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -32,4 +38,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
+
+detekt {
+    config = rootProject.files('detekt-config.yml')
 }
