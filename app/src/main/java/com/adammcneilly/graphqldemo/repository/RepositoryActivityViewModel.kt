@@ -1,4 +1,4 @@
-package com.adammcneilly.graphqldemo.main
+package com.adammcneilly.graphqldemo.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,34 +10,34 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivityViewModel(
+class RepositoryActivityViewModel(
     private val repository: GitHubRepository,
     private val dispatcherProvider: DispatcherProvider = DispatcherProvider()
 ) : BaseObservableViewModel() {
-    private val _state = MutableLiveData<MainActivityState>()
-    val state: LiveData<MainActivityState> = _state
+    private val _state = MutableLiveData<RepositoryActivityState>()
+    val state: LiveData<RepositoryActivityState> = _state
 
     val showLoading: Boolean
-        get() = state.value == null || state.value is MainActivityState.Loading
+        get() = state.value == null || state.value is RepositoryActivityState.Loading
 
     val showData: Boolean
-        get() = state.value is MainActivityState.Loaded
+        get() = state.value is RepositoryActivityState.Loaded
 
     val showError: Boolean
-        get() = state.value is MainActivityState.Error
+        get() = state.value is RepositoryActivityState.Error
 
     private var job: Job? = null
 
     fun fetchRepositories() {
         job = CoroutineScope(dispatcherProvider.IO).launch {
-            postStateToMain(MainActivityState.Loading)
+            postStateToMain(RepositoryActivityState.Loading)
 
             @Suppress("TooGenericExceptionCaught")
             val newState = try {
                 val response = repository.getRepositoriesAsync()
-                MainActivityState.Loaded(response)
+                RepositoryActivityState.Loaded(response)
             } catch (e: Throwable) {
-                MainActivityState.Error(e)
+                RepositoryActivityState.Error(e)
             }
 
             postStateToMain(newState)
@@ -47,7 +47,7 @@ class MainActivityViewModel(
     /**
      * Updates to the main thread context and sets a new state.
      */
-    private suspend fun postStateToMain(newState: MainActivityState) {
+    private suspend fun postStateToMain(newState: RepositoryActivityState) {
         withContext(dispatcherProvider.Main) {
             setState(newState)
         }
@@ -56,7 +56,7 @@ class MainActivityViewModel(
     /**
      * Updates the state of the viewmodel. This should be called on the main thread.
      */
-    private fun setState(newState: MainActivityState) {
+    private fun setState(newState: RepositoryActivityState) {
         _state.value = newState
         notifyChange()
     }

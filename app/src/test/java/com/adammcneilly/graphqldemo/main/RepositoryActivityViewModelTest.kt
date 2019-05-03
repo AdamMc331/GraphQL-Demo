@@ -3,6 +3,8 @@ package com.adammcneilly.graphqldemo.main
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.adammcneilly.graphqldemo.data.GitHubRepository
 import com.adammcneilly.graphqldemo.repository.Repository
+import com.adammcneilly.graphqldemo.repository.RepositoryActivityState
+import com.adammcneilly.graphqldemo.repository.RepositoryActivityViewModel
 import com.adammcneilly.graphqldemo.testObserver
 import com.adammcneilly.graphqldemo.util.DispatcherProvider
 import com.adammcneilly.graphqldemo.whenever
@@ -16,7 +18,7 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import java.lang.IllegalArgumentException
 
-class MainActivityViewModelTest {
+class RepositoryActivityViewModelTest {
 
     @JvmField
     @Rule
@@ -30,7 +32,8 @@ class MainActivityViewModelTest {
         runBlocking {
             val testRepos = listOf(Repository(id = "test"))
             whenever(mockRepository.getRepositoriesAsync()).thenReturn(testRepos)
-            val viewModel = MainActivityViewModel(mockRepository, testDispatcher)
+            val viewModel =
+                RepositoryActivityViewModel(mockRepository, testDispatcher)
             val observer = viewModel.state.testObserver()
             viewModel.fetchRepositories()
 
@@ -38,9 +41,9 @@ class MainActivityViewModelTest {
             assertTrue(viewModel.showData)
             assertFalse(viewModel.showError)
 
-            assertTrue(observer.observedValues.first() is MainActivityState.Loading)
-            assertTrue(observer.observedValues[1] is MainActivityState.Loaded)
-            assertEquals(testRepos, (observer.observedValues[1] as MainActivityState.Loaded).repositories)
+            assertTrue(observer.observedValues.first() is RepositoryActivityState.Loading)
+            assertTrue(observer.observedValues[1] is RepositoryActivityState.Loaded)
+            assertEquals(testRepos, (observer.observedValues[1] as RepositoryActivityState.Loaded).repositories)
         }
     }
 
@@ -49,7 +52,8 @@ class MainActivityViewModelTest {
         runBlocking {
             val testThrowable = IllegalArgumentException("Whoops")
             whenever(mockRepository.getRepositoriesAsync()).thenThrow(testThrowable)
-            val viewModel = MainActivityViewModel(mockRepository, testDispatcher)
+            val viewModel =
+                RepositoryActivityViewModel(mockRepository, testDispatcher)
             val observer = viewModel.state.testObserver()
             viewModel.fetchRepositories()
 
@@ -57,9 +61,9 @@ class MainActivityViewModelTest {
             assertFalse(viewModel.showData)
             assertTrue(viewModel.showError)
 
-            assertTrue(observer.observedValues.first() is MainActivityState.Loading)
-            assertTrue(observer.observedValues[1] is MainActivityState.Error)
-            assertEquals(testThrowable, (observer.observedValues[1] as MainActivityState.Error).error)
+            assertTrue(observer.observedValues.first() is RepositoryActivityState.Loading)
+            assertTrue(observer.observedValues[1] is RepositoryActivityState.Error)
+            assertEquals(testThrowable, (observer.observedValues[1] as RepositoryActivityState.Error).error)
         }
     }
 }

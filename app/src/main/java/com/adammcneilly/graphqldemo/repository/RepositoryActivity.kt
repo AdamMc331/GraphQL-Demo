@@ -1,4 +1,4 @@
-package com.adammcneilly.graphqldemo.main
+package com.adammcneilly.graphqldemo.repository
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.adammcneilly.graphqldemo.DemoApp
 import com.adammcneilly.graphqldemo.R
 import com.adammcneilly.graphqldemo.data.ApolloGitHubService
-import com.adammcneilly.graphqldemo.databinding.ActivityMainBinding
-import com.adammcneilly.graphqldemo.repository.RepositoryAdapter
+import com.adammcneilly.graphqldemo.databinding.ActivityRepositoryBinding
 
-class MainActivity : AppCompatActivity() {
+class RepositoryActivity : AppCompatActivity() {
     private val adapter = RepositoryAdapter()
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var binding: ActivityRepositoryBinding
+    private lateinit var viewModel: RepositoryActivityViewModel
 
     private val viewModelFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -26,13 +25,13 @@ class MainActivity : AppCompatActivity() {
             val repository = ApolloGitHubService(client)
 
             @Suppress("UNCHECKED_CAST")
-            return MainActivityViewModel(repository) as T
+            return RepositoryActivityViewModel(repository) as T
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_repository)
         setSupportActionBar(binding.toolbar)
 
         setupRecyclerView()
@@ -47,12 +46,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoryActivityViewModel::class.java)
         binding.viewModel = viewModel
 
         viewModel.state.observe(this, Observer { state ->
             when (state) {
-                is MainActivityState.Loaded -> adapter.repositories = state.repositories
+                is RepositoryActivityState.Loaded -> adapter.repositories = state.repositories
             }
         })
     }
