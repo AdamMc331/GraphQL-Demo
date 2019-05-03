@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.adammcneilly.graphqldemo.main.MainActivityViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:layout_width="match_parent"
+        tools:context=".main.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/repository_list"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:visibilityCondition="@{viewModel.showData}" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_dialog_email"/>
+            android:layout_width="wrap_content"
+            app:visibilityCondition="@{viewModel.showLoading}" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/something_went_wrong"
+            android:visibility="gone"
+            app:visibilityCondition="@{viewModel.showError}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

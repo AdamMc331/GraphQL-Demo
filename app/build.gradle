@@ -10,6 +10,8 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 apply from: "../ktlint.gradle"
 
+apply plugin: 'com.apollographql.android'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -19,6 +21,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def f = project.file("github_token")
+        if (!f.exists()) {
+            f.setText("your_token")
+        }
+
+        buildConfigField("String", "GITHUB_OAUTH_TOKEN", "\"${f.text.trim()}\"")
     }
     buildTypes {
         release {
@@ -26,20 +35,44 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
 }
 
 dependencies {
+    // https://github.com/apollographql/apollo-android/issues/1201#issuecomment-460569223
+    compileOnly 'javax.annotation:jsr250-api:1.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation "com.apollographql.apollo:apollo-runtime:$apollo_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    //noinspection GradleDependency
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    //noinspection GradleDependency
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.27.0'
+    testImplementation 'androidx.arch.core:core-testing:2.0.1'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
 detekt {
     config = rootProject.files('detekt-config.yml')
+}
+
+apollo {
+    outputPackageName = "com.adammcneilly.graphqldemo.graphql.api"
+    generateModelBuilder = true
 }
