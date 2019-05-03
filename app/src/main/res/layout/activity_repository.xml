@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.adammcneilly.graphqldemo.main.MainActivityViewModel" />
+            type="com.adammcneilly.graphqldemo.repository.RepositoryActivityViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,7 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context=".main.MainActivity">
+        tools:context=".repository.RepositoryActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
