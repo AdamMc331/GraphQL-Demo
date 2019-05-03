@@ -1,5 +1,6 @@
 package com.adammcneilly.graphqldemo.repository
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -13,9 +14,10 @@ import com.adammcneilly.graphqldemo.DemoApp
 import com.adammcneilly.graphqldemo.R
 import com.adammcneilly.graphqldemo.data.ApolloGitHubService
 import com.adammcneilly.graphqldemo.databinding.ActivityRepositoryBinding
+import com.adammcneilly.graphqldemo.detail.RepositoryDetailActivity
 
 class RepositoryActivity : AppCompatActivity() {
-    private val adapter = RepositoryAdapter()
+    private val adapter = RepositoryAdapter(this::showRepositoryDetail)
     private lateinit var binding: ActivityRepositoryBinding
     private lateinit var viewModel: RepositoryActivityViewModel
 
@@ -54,5 +56,12 @@ class RepositoryActivity : AppCompatActivity() {
                 is RepositoryActivityState.Loaded -> adapter.repositories = state.repositories
             }
         })
+    }
+
+    private fun showRepositoryDetail(repository: Repository) {
+        val intent = Intent(this, RepositoryDetailActivity::class.java)
+        intent.putExtra(RepositoryDetailActivity.REPOSITORY_NAME, repository.name)
+
+        startActivity(intent)
     }
 }

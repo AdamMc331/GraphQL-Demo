@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.adammcneilly.graphqldemo.databinding.ListItemRepositoryBinding
 
-class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
+class RepositoryAdapter(
+    private val repoClickListener: (Repository) -> Unit
+) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
     var repositories: List<Repository> = emptyList()
         set(value) {
             field = value
@@ -16,7 +18,7 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val binding = ListItemRepositoryBinding.inflate(inflater, parent, false)
-        return RepositoryViewHolder(binding)
+        return RepositoryViewHolder(binding, repoClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -27,11 +29,17 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
         holder.bindRepository(repositories[position])
     }
 
-    class RepositoryViewHolder(private val binding: ListItemRepositoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    class RepositoryViewHolder(
+        private val binding: ListItemRepositoryBinding,
+        repoClickListener: (Repository) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = RepositoryViewModel()
 
         init {
             binding.viewModel = viewModel
+            binding.root.setOnClickListener {
+                viewModel.repository?.let(repoClickListener::invoke)
+            }
         }
 
         fun bindRepository(repository: Repository) {

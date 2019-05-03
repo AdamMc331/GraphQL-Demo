@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.adammcneilly.graphqldemo.detail.RepositoryDetailActivityViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        tools:context=".detail.RepositoryDetailActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:background="?attr/colorPrimary"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:id="@+id/repository_detail_container"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:visibilityCondition="@{viewModel.showData}">
+
+            <TextView
+                android:id="@+id/repository_name"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryName}"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/repository_description"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryDescription}" />
+
+            <TextView
+                android:id="@+id/repository_issues"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryIssues}" />
+
+            <TextView
+                android:id="@+id/repository_pull_requests"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryPullRequests}" />
+
+            <TextView
+                android:id="@+id/repository_stars"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryStars}" />
+
+            <TextView
+                android:id="@+id/repository_forks"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryForks}" />
+
+            <TextView
+                android:id="@+id/repository_releases"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.repositoryReleases}" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:visibilityCondition="@{viewModel.showLoading}" />
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/something_went_wrong"
+            android:visibility="gone"
+            app:visibilityCondition="@{viewModel.showError}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
