@@ -16,7 +16,12 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".detail.RepositoryDetailActivity"
+            android:parentActivityName=".repository.RepositoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:name=".repository.RepositoryActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

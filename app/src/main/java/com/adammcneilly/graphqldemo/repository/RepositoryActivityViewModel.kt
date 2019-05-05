@@ -29,6 +29,8 @@ class RepositoryActivityViewModel(
     private var job: Job? = null
 
     fun fetchRepositories() {
+        if (showData) return
+
         job = CoroutineScope(dispatcherProvider.IO).launch {
             postStateToMain(RepositoryActivityState.Loading)
 
@@ -59,5 +61,10 @@ class RepositoryActivityViewModel(
     private fun setState(newState: RepositoryActivityState) {
         _state.value = newState
         notifyChange()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 }
